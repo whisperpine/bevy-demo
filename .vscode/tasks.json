@@ -9,6 +9,15 @@
                 "reveal": "never",
                 "clear": true,
             },
-        }
+        },
+        {
+            "label": "game_round_ecs",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example game_round_ecs",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }

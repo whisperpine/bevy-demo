@@ -1,3 +1,5 @@
+// #![cfg_attr(debug_assertions, allow(unused))]
+
 use bevy::prelude::*;
 
 fn main() {
