@@ -11,6 +11,15 @@
             },
         },
         {
+            "label": "bevy_book_demo",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example bevy_book_demo",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
+        {
             "label": "example playground",
             "type": "shell",
             "command": "cargo run --features bevy/dynamic_linking --example playground",
