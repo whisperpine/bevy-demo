@@ -6,6 +6,7 @@ fn main() {
     println!("\n#### bevy_book_demo ####\n");
     App::new().add_plugins((MinimalPlugins, HelloPlugin)).run();
 }
+
 struct HelloPlugin;
 
 impl Plugin for HelloPlugin {
@@ -17,8 +18,11 @@ impl Plugin for HelloPlugin {
 }
 
 fn add_people(mut commands: Commands) {
-    commands.spawn((Person, Name("amiao".to_owned())));
-    commands.spawn((Person, Name("yusong".to_owned())));
+    commands.spawn_batch([
+        Player::new("amiao"),
+        Player::new("yusong"),
+        Player::new("yahaha"),
+    ]);
 }
 
 #[derive(Resource)]
@@ -29,6 +33,7 @@ fn greet_people(res: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Nam
         for name in &query {
             println!("hello {}!", **name);
         }
+        println!();
     }
 }
 
@@ -37,3 +42,18 @@ struct Person;
 
 #[derive(Component, Deref)]
 struct Name(String);
+
+#[derive(Bundle)]
+struct Player {
+    person: Person,
+    name: Name,
+}
+
+impl Player {
+    fn new(name: &str) -> Self {
+        Self {
+            person: Person,
+            name: Name(name.to_owned()),
+        }
+    }
+}

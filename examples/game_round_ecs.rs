@@ -4,10 +4,9 @@ use bevy::prelude::*;
 
 fn main() {
     use bevy::app::ScheduleRunnerPlugin;
+    use std::time::Duration;
     App::new()
-        .add_plugins(ScheduleRunnerPlugin::run_loop(
-            std::time::Duration::from_secs(1),
-        ))
+        .add_plugins(ScheduleRunnerPlugin::run_loop(Duration::from_secs(1)))
         .add_plugins(AmiaoGamePlugin)
         .run();
 }
@@ -94,7 +93,7 @@ impl Display for GameRules {
 
 /// Add player at startup.
 fn init_player_system(mut game_state: ResMut<GameState>, mut cmd: Commands) {
-    cmd.spawn_batch(vec![
+    cmd.spawn_batch([
         (Player, Name("Amiao".to_owned()), Score::default()),
         (Player, Name("Tom".to_owned()), Score::default()),
     ]);
