@@ -4,7 +4,10 @@ use bevy::prelude::*;
 
 fn main() {
     println!("\n#### bevy_book_demo ####\n");
-    App::new().add_plugins((MinimalPlugins, HelloPlugin)).run();
+    App::new()
+        .add_plugins((DefaultPlugins, HelloPlugin))
+        .add_systems(Update, close_on_esc)
+        .run();
 }
 
 struct HelloPlugin;
@@ -58,6 +61,19 @@ impl Player {
         Self {
             person: Person,
             name: Name(name.to_owned()),
+        }
+    }
+}
+
+/// Press `Ecs` to close focussed window.
+///
+/// The same as [`bevy::window::close_on_esc`].
+fn close_on_esc(mut cmd: Commands, query: Query<(Entity, &Window)>, input: Res<Input<KeyCode>>) {
+    for (entity, window) in query.iter() {
+        if !window.focused {
+            continue;
+        } else if input.just_pressed(KeyCode::Escape) {
+            cmd.entity(entity).despawn();
         }
     }
 }
