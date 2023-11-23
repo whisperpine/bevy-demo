@@ -12,9 +12,13 @@ struct HelloPlugin;
 impl Plugin for HelloPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(GreetTimer(Timer::from_seconds(2.0, TimerMode::Repeating)))
-            .add_systems(Startup, add_people)
+            .add_systems(Startup, (print_hints, add_people))
             .add_systems(Update, greet_people);
     }
+}
+
+fn print_hints() {
+    println!("Press Ctrl+C to exit.\n");
 }
 
 fn add_people(mut commands: Commands) {

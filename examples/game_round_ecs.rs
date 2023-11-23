@@ -6,8 +6,10 @@ fn main() {
     use bevy::app::ScheduleRunnerPlugin;
     use std::time::Duration;
     App::new()
-        .add_plugins(ScheduleRunnerPlugin::run_loop(Duration::from_secs(1)))
-        .add_plugins(AmiaoGamePlugin)
+        .add_plugins((
+            ScheduleRunnerPlugin::run_loop(Duration::from_secs(1)),
+            AmiaoGamePlugin,
+        ))
         .run();
 }
 
@@ -168,10 +170,11 @@ fn game_over_system(
     mut app_exit_event: EventWriter<AppExit>,
 ) {
     if let Some(name) = &game_state.winner {
-        println!("\nWinner is {}", name.0);
+        println!("\nWinner is {}\n", name.0);
         app_exit_event.send(AppExit);
     } else if game_state.current_round >= game_rules.max_round {
-        println!("Game over without a winner\n")
+        println!("\nGame over without a winner\n");
+        app_exit_event.send(AppExit);
     }
 }
 
