@@ -53,9 +53,11 @@ enum MySystemSet {
 
 #[derive(Component)]
 struct Player;
+
 #[derive(Component, Clone)]
 struct Name(String);
-#[derive(Component, Default)]
+
+#[derive(Component, Default, Deref, DerefMut)]
 struct Score(usize);
 
 #[derive(Resource, Default)]
@@ -107,20 +109,20 @@ fn log_game_rule_system(game_rules: Res<GameRules>) {
 }
 
 /// Randomly score a point to players.
-fn add_score_system(mut query: Query<(&mut Score, &Name, With<Player>)>) {
+fn add_score_system(mut query: Query<(&mut Score, &Name), With<Player>>) {
     use rand::Rng;
     let mut rng = rand::thread_rng();
-    for (mut score, name, ..) in &mut query {
+    for (mut score, name) in &mut query {
         if rng.gen::<bool>() {
-            score.0 += 1;
+            **score += 1;
             println!("+++ {}'s score +1", name.0);
         }
     }
 }
 
 /// Log every player's score.
-fn log_score_system(query: Query<(&Score, &Name, With<Player>)>) {
-    for (score, name, ..) in &query {
+fn log_score_system(query: Query<(&Score, &Name), With<Player>>) {
+    for (score, name) in &query {
         println!("{}'s score is {}", name.0, score.0);
     }
 }
@@ -129,9 +131,9 @@ fn log_score_system(query: Query<(&Score, &Name, With<Player>)>) {
 fn check_score_system(
     game_rules: Res<GameRules>,
     mut game_state: ResMut<GameState>,
-    query: Query<(&Score, &Name, With<Player>)>,
+    query: Query<(&Score, &Name), With<Player>>,
 ) {
-    for (score, name, ..) in &query {
+    for (score, name) in &query {
         if score.0 >= game_rules.score_to_win {
             game_state.winner = Some((*name).clone());
         }
