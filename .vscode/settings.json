@@ -3,6 +3,7 @@
         "LICENSE": "plain text"
     },
     "files.readonlyInclude": {
-        "LICENSE": true
+        "LICENSE": true,
+        "target/**": true
     },
 }
