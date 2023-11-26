@@ -11,15 +11,6 @@
             },
         },
         {
-            "label": "bevy_book_demo",
-            "type": "shell",
-            "command": "cargo run --features bevy/dynamic_linking --example bevy_book_demo",
-            "presentation": {
-                "reveal": "never",
-                "clear": true,
-            },
-        },
-        {
             "label": "example playground",
             "type": "shell",
             "command": "cargo run --features bevy/dynamic_linking --example playground",
@@ -29,9 +20,36 @@
             },
         },
         {
+            "label": "example next",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example next",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
+        {
+            "label": "bevy_book_ecs",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example bevy_book_ecs",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
+        {
             "label": "example game_round_ecs",
             "type": "shell",
             "command": "cargo run --features bevy/dynamic_linking --example game_round_ecs",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
+        {
+            "label": "example level_up_ecs",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example level_up_ecs",
             "presentation": {
                 "reveal": "never",
                 "clear": true,

@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 
 fn main() {
-    println!("\n#### bevy_book_demo ####\n");
+    println!("\n#### bevy_book_ecs ####\n");
     App::new()
         .add_plugins((DefaultPlugins, HelloPlugin))
         .add_systems(Update, close_on_esc)
@@ -26,17 +26,21 @@ fn print_hints() {
 
 fn add_people(mut commands: Commands) {
     commands.spawn_batch([
-        Player::new("amiao"),
-        Player::new("yusong"),
-        Player::new("yahaha"),
+        PlayerBundle::new("amiao"),
+        PlayerBundle::new("yusong"),
+        PlayerBundle::new("yahaha"),
     ]);
 }
 
 #[derive(Resource)]
 struct GreetTimer(Timer);
 
-fn greet_people(res: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Name, With<Person>>) {
-    if timer.0.tick(res.delta()).just_finished() {
+fn greet_people(
+    time: Res<Time>,
+    mut greet_timer: ResMut<GreetTimer>,
+    query: Query<&Name, With<Person>>,
+) {
+    if greet_timer.0.tick(time.delta()).just_finished() {
         for name in &query {
             println!("hello {}!", **name);
         }
@@ -51,12 +55,12 @@ struct Person;
 struct Name(String);
 
 #[derive(Bundle)]
-struct Player {
+struct PlayerBundle {
     person: Person,
     name: Name,
 }
 
-impl Player {
+impl PlayerBundle {
     fn new(name: &str) -> Self {
         Self {
             person: Person,

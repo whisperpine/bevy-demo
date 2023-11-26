@@ -5,6 +5,9 @@ use bevy::prelude::*;
 fn main() {
     use bevy::app::ScheduleRunnerPlugin;
     use std::time::Duration;
+
+    println!("\n#### game_round_ecs ####\n");
+
     App::new()
         .add_plugins((
             ScheduleRunnerPlugin::run_loop(Duration::from_secs(1)),
