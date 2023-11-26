@@ -1,11 +1,21 @@
 #![cfg_attr(debug_assertions, allow(unused))]
 
-use bevy::prelude::*;
+use bevy::{log::LogPlugin, prelude::*};
 
 fn main() {
     println!("\n#### level_up_ecs ####\n");
+    const CRATE_NAME: &str = env!("CARGO_CRATE_NAME");
 
-    App::new().add_plugins((MinimalPlugins, MyGamePlugin)).run();
+    App::new()
+        .add_plugins((
+            MinimalPlugins,
+            LogPlugin {
+                filter: format!("wgpu=error,naga=warn,{}=debug", CRATE_NAME),
+                ..Default::default()
+            },
+            MyGamePlugin,
+        ))
+        .run();
 }
 
 struct MyGamePlugin;
@@ -89,7 +99,7 @@ fn player_level_up_system(
 
 fn log_level_up_system(mut even_reader: EventReader<LevelUpEvent>) {
     for e in even_reader.read() {
-        println!("+++ {}({:?}) levels up to lv{}", e.name, e.entity, e.level);
+        info!("+++ {}({:?}) levels up to lv{}", e.name, e.entity, e.level);
     }
 }
 
@@ -124,7 +134,7 @@ fn add_xp_system(
         if rng.gen_bool(0.5) {
             let delta_xp: u32 = rng.gen_range(200..500);
             xp.0 += delta_xp;
-            println!(
+            debug!(
                 "{} add {} xp ({} / {})",
                 name.0, delta_xp, xp.0, game_rules.level_up_xp
             );
