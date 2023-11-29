@@ -55,5 +55,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example state",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example state",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }

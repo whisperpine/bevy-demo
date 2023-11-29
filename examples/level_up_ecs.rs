@@ -8,12 +8,12 @@ fn main() {
 
     App::new()
         .add_plugins((
+            MyGamePlugin,
             MinimalPlugins,
             LogPlugin {
                 filter: format!("wgpu=error,naga=warn,{}=debug", CRATE_NAME),
                 ..Default::default()
             },
-            MyGamePlugin,
         ))
         .run();
 }
