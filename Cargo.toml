@@ -16,5 +16,5 @@ lto = "thin"
 
 [dependencies]
 anyhow = "1.0.75"
-bevy = "0.12.0"
+bevy = "0.12.1"
 rand = "0.8.5"
