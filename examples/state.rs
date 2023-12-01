@@ -1,13 +1,6 @@
 #![cfg_attr(debug_assertions, allow(unused))]
 
-//! This example illustrates how to use [`States`] for high-level app control flow.
-//! States are a powerful but intuitive tool for controlling which logic runs when.
-//! You can have multiple independent states, and the [`OnEnter`] and [`OnExit`] schedules
-//! can be used to great effect to ensure that you handle setup and teardown appropriately.
-//!
-//! In this case, we're transitioning from a `Menu` state to an `InGame` state.
-
-use bevy::prelude::*;
+use bevy::{core::Zeroable, prelude::*};
 
 fn main() {
     println!("\n#### state ####\n");
@@ -16,23 +9,19 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_state::<AppState>()
         .add_systems(Startup, setup)
-        // This system runs when we enter `AppState::Menu`, during the `StateTransition` schedule.
-        // All systems from the exit schedule of the state we're leaving are run first,
-        // and then all systems from the enter schedule of the state we're entering are run second.
-        .add_systems(OnEnter(AppState::Menu), setup_menu)
-        // By contrast, update systems are stored in the `Update` schedule. They simply
-        // check the value of the `State<T>` resource to see if they should run each frame.
+        .add_systems(OnEnter(AppState::Menu), menu_setup)
+        .add_systems(OnExit(AppState::Menu), menu_cleanup)
+        .add_systems(OnEnter(AppState::InGame), spawn_sprite)
         .add_systems(Update, menu.run_if(in_state(AppState::Menu)))
-        .add_systems(OnExit(AppState::Menu), cleanup_menu)
-        .add_systems(OnEnter(AppState::InGame), setup_game)
         .add_systems(
             Update,
-            (movement, change_color).run_if(in_state(AppState::InGame)),
+            (sprite_move, change_color).run_if(in_state(AppState::InGame)),
         )
+        .add_systems(Update, bevy::window::close_on_esc)
         .run();
 }
 
-#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash, States)]
 enum AppState {
     #[default]
     Menu,
@@ -40,30 +29,23 @@ enum AppState {
 }
 
 #[derive(Resource)]
-struct MenuData {
-    button_entity: Entity,
+struct MenuItem(Entity);
+
+fn setup(mut cmd: Commands) {
+    cmd.spawn(Camera2dBundle::default());
 }
 
-const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
-const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
-
-fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
-}
-
-fn setup_menu(mut commands: Commands) {
-    let button_entity = commands
+fn menu_setup(mut cmd: Commands) {
+    let entity = cmd
         .spawn(NodeBundle {
             style: Style {
-                // center button
                 width: Val::Percent(100.),
                 height: Val::Percent(100.),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
-                ..default()
+                ..Default::default()
             },
-            ..default()
+            ..Default::default()
         })
         .with_children(|parent| {
             parent
@@ -71,84 +53,85 @@ fn setup_menu(mut commands: Commands) {
                     style: Style {
                         width: Val::Px(150.),
                         height: Val::Px(65.),
-                        // horizontally center child text
                         justify_content: JustifyContent::Center,
-                        // vertically center child text
                         align_items: AlignItems::Center,
-                        ..default()
+                        ..Default::default()
                     },
-                    background_color: NORMAL_BUTTON.into(),
-                    ..default()
+                    background_color: BUTTON_COLOR_DEFAULT.into(),
+                    ..Default::default()
                 })
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(
                         "Play",
                         TextStyle {
-                            font_size: 40.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
-                            ..default()
+                            font_size: 35.,
+                            ..Default::default()
                         },
                     ));
                 });
         })
         .id();
-    commands.insert_resource(MenuData { button_entity });
+
+    cmd.insert_resource(MenuItem(entity));
 }
+
+const BUTTON_COLOR_DEFAULT: Color = Color::BLACK;
+const BUTTON_COLOR_HOVER: Color = Color::SEA_GREEN;
+const BUTTON_COLOR_PRESSED: Color = Color::ORANGE;
 
 #[allow(clippy::type_complexity)]
 fn menu(
-    mut next_state: ResMut<NextState<AppState>>,
-    mut interaction_query: Query<
+    mut app_state: ResMut<NextState<AppState>>,
+    mut button_query: Query<
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<Button>),
     >,
 ) {
-    for (interaction, mut color) in &mut interaction_query {
-        match *interaction {
+    for (interaction, mut bg_color) in button_query.iter_mut() {
+        match interaction {
             Interaction::Pressed => {
-                *color = PRESSED_BUTTON.into();
-                next_state.set(AppState::InGame);
+                *bg_color = BUTTON_COLOR_PRESSED.into();
+                app_state.set(AppState::InGame);
             }
-            Interaction::Hovered => {
-                *color = HOVERED_BUTTON.into();
-            }
-            Interaction::None => {
-                *color = NORMAL_BUTTON.into();
-            }
-        }
+            Interaction::Hovered => *bg_color = BUTTON_COLOR_HOVER.into(),
+            Interaction::None => *bg_color = BUTTON_COLOR_DEFAULT.into(),
+        };
     }
 }
 
-fn cleanup_menu(mut commands: Commands, menu_data: Res<MenuData>) {
-    commands.entity(menu_data.button_entity).despawn_recursive();
+fn menu_cleanup(mut cmd: Commands, menu_item: Option<Res<MenuItem>>) {
+    if let Some(item) = menu_item {
+        cmd.entity(item.0).despawn_recursive();
+    }
 }
 
-fn setup_game(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(SpriteBundle {
-        texture: asset_server.load("branding/icon.png"),
-        ..default()
+fn spawn_sprite(mut cmd: Commands, asset_server: Res<AssetServer>) {
+    cmd.spawn(SpriteBundle {
+        texture: asset_server.load("./branding/icon.png"),
+        ..Default::default()
     });
 }
 
-const SPEED: f32 = 100.0;
-fn movement(
+const SPEED: f32 = 300.;
+
+fn sprite_move(
     time: Res<Time>,
     input: Res<Input<KeyCode>>,
     mut query: Query<&mut Transform, With<Sprite>>,
 ) {
-    for mut transform in &mut query {
+    for mut transform in query.iter_mut() {
         let mut direction = Vec3::ZERO;
-        if input.pressed(KeyCode::Left) {
-            direction.x -= 1.0;
-        }
-        if input.pressed(KeyCode::Right) {
-            direction.x += 1.0;
-        }
         if input.pressed(KeyCode::Up) {
-            direction.y += 1.0;
+            direction = Vec3::Y;
         }
         if input.pressed(KeyCode::Down) {
-            direction.y -= 1.0;
+            direction = Vec3::Y * -1.;
+        }
+        if input.pressed(KeyCode::Right) {
+            direction = Vec3::X;
+        }
+        if input.pressed(KeyCode::Left) {
+            direction = Vec3::X * -1.;
         }
 
         if direction != Vec3::ZERO {
