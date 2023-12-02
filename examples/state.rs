@@ -1,6 +1,6 @@
 #![cfg_attr(debug_assertions, allow(unused))]
 
-use bevy::{core::Zeroable, prelude::*};
+use bevy::prelude::*;
 
 fn main() {
     println!("\n#### state ####\n");
@@ -8,14 +8,14 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_state::<AppState>()
-        .add_systems(Startup, setup)
-        .add_systems(OnEnter(AppState::Menu), menu_setup)
-        .add_systems(OnExit(AppState::Menu), menu_cleanup)
+        .add_systems(Startup, setup_camera)
+        .add_systems(OnEnter(AppState::Menu), setup_menu)
+        .add_systems(OnExit(AppState::Menu), cleanup_menu)
         .add_systems(OnEnter(AppState::InGame), spawn_sprite)
         .add_systems(Update, menu.run_if(in_state(AppState::Menu)))
         .add_systems(
             Update,
-            (sprite_move, change_color).run_if(in_state(AppState::InGame)),
+            (move_sprite, change_color).run_if(in_state(AppState::InGame)),
         )
         .add_systems(Update, bevy::window::close_on_esc)
         .run();
@@ -31,11 +31,11 @@ enum AppState {
 #[derive(Resource)]
 struct MenuItem(Entity);
 
-fn setup(mut cmd: Commands) {
+fn setup_camera(mut cmd: Commands) {
     cmd.spawn(Camera2dBundle::default());
 }
 
-fn menu_setup(mut cmd: Commands) {
+fn setup_menu(mut cmd: Commands) {
     let entity = cmd
         .spawn(NodeBundle {
             style: Style {
@@ -99,7 +99,7 @@ fn menu(
     }
 }
 
-fn menu_cleanup(mut cmd: Commands, menu_item: Option<Res<MenuItem>>) {
+fn cleanup_menu(mut cmd: Commands, menu_item: Option<Res<MenuItem>>) {
     if let Some(item) = menu_item {
         cmd.entity(item.0).despawn_recursive();
     }
@@ -114,7 +114,7 @@ fn spawn_sprite(mut cmd: Commands, asset_server: Res<AssetServer>) {
 
 const SPEED: f32 = 300.;
 
-fn sprite_move(
+fn move_sprite(
     time: Res<Time>,
     input: Res<Input<KeyCode>>,
     mut query: Query<&mut Transform, With<Sprite>>,

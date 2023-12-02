@@ -64,5 +64,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example system_param",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example system_param",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
