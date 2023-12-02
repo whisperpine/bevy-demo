@@ -73,5 +73,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example component_change_detection",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example component_change_detection",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
