@@ -82,5 +82,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example parallel_query",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example parallel_query",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
