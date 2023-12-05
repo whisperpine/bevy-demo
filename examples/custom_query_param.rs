@@ -1,32 +1,61 @@
-#![cfg_attr(debug_assertions, allow(unused))]
+// #![cfg_attr(debug_assertions, allow(unused))]
 
-use bevy::{ecs::query::WorldQuery, prelude::*, ui::debug};
+use std::fmt::Debug;
+
+use bevy::ecs::query::WorldQuery;
+use bevy::prelude::*;
 
 fn main() {
     println!("\n#### custom_query_param ####\n");
+
+    use bevy::app::ScheduleRunnerPlugin;
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(MinimalPlugins.set(ScheduleRunnerPlugin::run_loop(
+            std::time::Duration::from_secs_f32(0.5),
+        )))
         .add_systems(Startup, setup)
         .add_systems(Update, print_system)
-        .add_systems(Update, bevy::window::close_on_esc)
         .run();
 }
 
 fn setup(mut cmd: Commands) {
-    cmd.spawn((ComponentA, ComponentB, ComponentC));
+    cmd.spawn((
+        ComponentA {
+            name: "amiao".to_owned(),
+        },
+        ComponentB(0),
+        ComponentC,
+        ComponentD,
+    ));
+    cmd.spawn((
+        ComponentA {
+            name: "yahaha".to_owned(),
+        },
+        ComponentC,
+        ComponentD,
+    ));
 }
 
-fn print_system(query: Query<CustomQuery, QueryFilter>) {
-    for e in query.iter() {
-        println!("{:?}", e.a);
+fn print_system(mut query: Query<CustomQuery<ComponentC, ComponentD>, QueryFilter>) {
+    for e in query.iter_mut() {
+        println!("{:?}", e.entity);
+        println!("{:?}", e.a.name);
+        if let Some(mut component_b) = e.b {
+            **component_b += 1;
+            println!("{:?}", component_b);
+        }
+        println!("{:?}", e.generic.value);
     }
+    println!();
 }
 
 #[derive(Component, Debug)]
-struct ComponentA;
+struct ComponentA {
+    name: String,
+}
 
-#[derive(Component, Debug)]
-struct ComponentB;
+#[derive(Component, Debug, Deref, DerefMut)]
+struct ComponentB(u32);
 
 #[derive(Component, Debug)]
 struct ComponentC;
@@ -34,19 +63,28 @@ struct ComponentC;
 #[derive(Component, Debug)]
 struct ComponentD;
 
-#[derive(Component, Debug)]
-struct ComponentE;
-
 #[derive(WorldQuery)]
 #[world_query(mutable, derive(Debug))]
-struct CustomQuery {
+struct CustomQuery<T, U>
+where
+    T: Component + Debug,
+    U: Component + Debug,
+{
+    entity: Entity,
     a: &'static ComponentA,
+    b: Option<&'static mut ComponentB>,
+    generic: GenericQuery<T, U>,
+}
+
+#[derive(WorldQuery)]
+#[world_query(derive(Debug))]
+struct GenericQuery<T: Component, U: Component> {
+    value: (&'static T, &'static U),
 }
 
 #[derive(WorldQuery)]
 #[world_query(derive(Debug))]
 struct QueryFilter {
     _a: With<ComponentA>,
-    _b: With<ComponentB>,
     _c_or_d: Or<(With<ComponentC>, With<ComponentD>)>,
 }
