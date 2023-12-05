@@ -91,5 +91,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example custom_query_param",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example custom_query_param",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
