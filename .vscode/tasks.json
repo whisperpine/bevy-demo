@@ -109,5 +109,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example generic_system",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example generic_system",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
