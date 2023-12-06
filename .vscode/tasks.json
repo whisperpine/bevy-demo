@@ -100,5 +100,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example fixed_timestep",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example fixed_timestep",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
