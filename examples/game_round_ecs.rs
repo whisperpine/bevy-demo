@@ -11,14 +11,14 @@ fn main() {
     App::new()
         .add_plugins((
             ScheduleRunnerPlugin::run_loop(Duration::from_secs(1)),
-            AmiaoGamePlugin,
+            MyGamePlugin,
         ))
         .run();
 }
 
-struct AmiaoGamePlugin;
+struct MyGamePlugin;
 
-impl Plugin for AmiaoGamePlugin {
+impl Plugin for MyGamePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<GameRules>()
             .init_resource::<GameState>()

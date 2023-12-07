@@ -20,6 +20,7 @@ fn spawn_system(mut cmd: Commands, asset_server: Res<AssetServer>) {
     let mut rng = rand::thread_rng();
 
     const SPEED: f32 = 500.;
+    let texture = asset_server.load("branding/icon.png");
 
     cmd.spawn(Camera2dBundle::default());
     for _ in 0..1024 {
@@ -27,7 +28,7 @@ fn spawn_system(mut cmd: Commands, asset_server: Res<AssetServer>) {
             bevy::math::vec2(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0)).normalize();
         cmd.spawn((
             SpriteBundle {
-                texture: asset_server.load("branding/icon.png"),
+                texture: texture.clone(),
                 ..Default::default()
             },
             Velocity(direction * SPEED),

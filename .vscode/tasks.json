@@ -118,5 +118,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example hierarchy",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example hierarchy",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
