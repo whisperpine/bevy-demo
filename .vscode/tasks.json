@@ -127,5 +127,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example one_shot_systems",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example one_shot_systems",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
