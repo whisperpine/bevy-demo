@@ -59,7 +59,7 @@ fn bounce_system(
     use bevy::ecs::query::BatchingStrategy;
     sprites
         .par_iter_mut()
-        .batching_strategy(BatchingStrategy::fixed(32))
+        .batching_strategy(BatchingStrategy::fixed(64))
         .for_each(|(transform, mut velocity)| {
             let translation = transform.translation;
             if !(left < translation.x

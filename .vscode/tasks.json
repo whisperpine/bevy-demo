@@ -136,5 +136,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example remove_detection",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example remove_detection",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
