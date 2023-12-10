@@ -1,6 +1,6 @@
-#![cfg_attr(debug_assertions, allow(unused))]
+// #![cfg_attr(debug_assertions, allow(unused))]
 
-use bevy::{core::FrameCount, prelude::*};
+use bevy::prelude::*;
 
 fn main() {
     println!("\n#### hierarchy ####\n");

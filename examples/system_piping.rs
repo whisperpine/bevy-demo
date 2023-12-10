@@ -1,7 +1,7 @@
 //! Illustrates how to make a single system from multiple functions running in sequence,
 //! passing the output of the first into the input of the next.
 
-#![cfg_attr(debug_assertions, allow(unused))]
+// #![cfg_attr(debug_assertions, allow(unused))]
 
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
@@ -19,7 +19,7 @@ fn main() {
             ..Default::default()
         })
         .add_systems(Update, parse_int.pipe(log_parse_int))
-        .add_systems(Update, data_output.map(dbg))
+        .add_systems(Update, (data_output.map(dbg), data_output.map(info)))
         .add_systems(
             Update,
             (warning_output.map(warn), warning_output.map(error)),

@@ -1,6 +1,6 @@
-#![cfg_attr(debug_assertions, allow(unused))]
+// #![cfg_attr(debug_assertions, allow(unused))]
 
-use bevy::log::{Level, LogPlugin};
+use bevy::log::LogPlugin;
 use bevy::prelude::*;
 
 const CRATE_NAME: &str = env!("CARGO_CRATE_NAME");

@@ -1,4 +1,4 @@
-#![cfg_attr(debug_assertions, allow(unused))]
+// #![cfg_attr(debug_assertions, allow(unused))]
 
 use bevy::{ecs::system::SystemParam, prelude::*};
 

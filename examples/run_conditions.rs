@@ -1,3 +1,5 @@
+//! This example demonstrates how to use run conditions to control when systems run.
+
 #![cfg_attr(debug_assertions, allow(unused))]
 
 use std::fmt::Debug;
