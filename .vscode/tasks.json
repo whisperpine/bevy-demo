@@ -145,5 +145,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example system_piping",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example system_piping",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
