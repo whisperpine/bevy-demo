@@ -154,5 +154,14 @@
                 "clear": true,
             },
         },
+        {
+            "label": "example run_conditions",
+            "type": "shell",
+            "command": "cargo run --features bevy/dynamic_linking --example run_conditions",
+            "presentation": {
+                "reveal": "never",
+                "clear": true,
+            },
+        },
     ]
 }
