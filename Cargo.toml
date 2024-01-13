@@ -17,6 +17,6 @@ opt-level = 3
 lto = "thin"
 
 [dependencies]
-anyhow = "1.0.75"
+anyhow = "1.0.79"
 bevy = "0.12.1"
 rand = "0.8.5"
