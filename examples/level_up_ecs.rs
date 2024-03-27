@@ -92,7 +92,7 @@ fn player_level_up_system(
                 entity,
                 name: name.0.clone(),
                 level: level.0,
-            })
+            });
         }
     }
 }

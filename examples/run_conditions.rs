@@ -16,13 +16,13 @@ fn main() {
         .add_systems(
             Update,
             count_input
-                .run_if(resource_exists::<InputCounter>())
-                .run_if(resource_exists::<Unused>().or_else(has_user_input)),
+                .run_if(resource_exists::<InputCounter>)
+                .run_if(resource_exists::<Unused>.or_else(has_user_input)),
         )
         .add_systems(
             Update,
             print_input_counter.after(count_input).run_if(
-                resource_exists::<InputCounter>().and_then(|input_counter: Res<InputCounter>| {
+                resource_exists::<InputCounter>.and_then(|input_counter: Res<InputCounter>| {
                     input_counter.is_changed() && !input_counter.is_added()
                 }),
             ),
@@ -50,7 +50,7 @@ fn print_input_counter(input_counter: ResMut<InputCounter>) {
     println!("{:?}", *input_counter);
 }
 
-fn log_input(keyboard: Res<Input<KeyCode>>, mouse: Res<Input<MouseButton>>) {
+fn log_input(keyboard: Res<ButtonInput<KeyCode>>, mouse: Res<ButtonInput<MouseButton>>) {
     for key in keyboard.get_just_pressed() {
         println!("KeyCode: {:?}", key);
     }
@@ -59,7 +59,10 @@ fn log_input(keyboard: Res<Input<KeyCode>>, mouse: Res<Input<MouseButton>>) {
     }
 }
 
-fn has_user_input(keyboard: Res<Input<KeyCode>>, mouse: Res<Input<MouseButton>>) -> bool {
+fn has_user_input(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    mouse: Res<ButtonInput<MouseButton>>,
+) -> bool {
     keyboard.just_pressed(KeyCode::Space)
         || mouse.any_just_pressed([MouseButton::Left, MouseButton::Right])
 }

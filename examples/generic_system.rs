@@ -6,7 +6,7 @@ fn main() {
     println!("\n#### generic_system ####\n");
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_state::<AppState>()
+        .init_state::<AppState>()
         .add_systems(Startup, setup)
         .add_systems(
             Update,
@@ -35,10 +35,10 @@ fn setup(mut cmd: Commands) {
     cmd.spawn(InGameStateTag);
 }
 
-fn change_app_state(mut app_state: ResMut<NextState<AppState>>, input: Res<Input<KeyCode>>) {
-    if input.just_pressed(KeyCode::Q) {
+fn change_app_state(mut app_state: ResMut<NextState<AppState>>, input: Res<ButtonInput<KeyCode>>) {
+    if input.just_pressed(KeyCode::KeyQ) {
         app_state.set(AppState::Menu);
-    } else if input.just_pressed(KeyCode::W) {
+    } else if input.just_pressed(KeyCode::KeyW) {
         app_state.set(AppState::InGame);
     }
 }

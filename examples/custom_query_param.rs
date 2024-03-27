@@ -2,7 +2,7 @@
 
 use std::fmt::Debug;
 
-use bevy::ecs::query::WorldQuery;
+use bevy::ecs::query::{QueryData, QueryFilter};
 use bevy::prelude::*;
 
 fn main() {
@@ -36,7 +36,7 @@ fn setup(mut cmd: Commands) {
     ));
 }
 
-fn print_system(mut query: Query<CustomQuery<ComponentC, ComponentD>, QueryFilter>) {
+fn print_system(mut query: Query<CustomQuery<ComponentC, ComponentD>, MyQueryFilter>) {
     for e in query.iter_mut() {
         println!("{:?}", e.entity);
         println!("{:?}", e.a.name);
@@ -63,8 +63,8 @@ struct ComponentC;
 #[derive(Component, Debug)]
 struct ComponentD;
 
-#[derive(WorldQuery)]
-#[world_query(mutable, derive(Debug))]
+#[derive(QueryData)]
+#[query_data(mutable, derive(Debug))]
 struct CustomQuery<T, U>
 where
     T: Component + Debug,
@@ -76,15 +76,14 @@ where
     generic: GenericQuery<T, U>,
 }
 
-#[derive(WorldQuery)]
-#[world_query(derive(Debug))]
+#[derive(QueryData)]
+#[query_data(derive(Debug))]
 struct GenericQuery<T: Component, U: Component> {
     value: (&'static T, &'static U),
 }
 
-#[derive(WorldQuery)]
-#[world_query(derive(Debug))]
-struct QueryFilter {
+#[derive(QueryFilter)]
+struct MyQueryFilter {
     _a: With<ComponentA>,
     _c_or_d: Or<(With<ComponentC>, With<ComponentD>)>,
 }

@@ -7,7 +7,7 @@ fn main() {
 
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_state::<AppState>()
+        .init_state::<AppState>()
         .add_systems(Startup, setup_camera)
         .add_systems(OnEnter(AppState::Menu), setup_menu)
         .add_systems(OnExit(AppState::Menu), cleanup_menu)
@@ -116,21 +116,21 @@ const SPEED: f32 = 300.;
 
 fn move_sprite(
     time: Res<Time>,
-    input: Res<Input<KeyCode>>,
+    input: Res<ButtonInput<KeyCode>>,
     mut query: Query<&mut Transform, With<Sprite>>,
 ) {
     for mut transform in query.iter_mut() {
         let mut direction = Vec3::ZERO;
-        if input.pressed(KeyCode::Up) {
+        if input.pressed(KeyCode::ArrowUp) {
             direction = Vec3::Y;
         }
-        if input.pressed(KeyCode::Down) {
+        if input.pressed(KeyCode::ArrowDown) {
             direction = Vec3::Y * -1.;
         }
-        if input.pressed(KeyCode::Right) {
+        if input.pressed(KeyCode::ArrowRight) {
             direction = Vec3::X;
         }
-        if input.pressed(KeyCode::Left) {
+        if input.pressed(KeyCode::ArrowLeft) {
             direction = Vec3::X * -1.;
         }
 
