@@ -80,7 +80,8 @@ fn close_on_esc(
     for (entity, window) in query.iter() {
         if !window.focused {
             continue;
-        } else if input.just_pressed(KeyCode::Escape) {
+        }
+        if input.just_pressed(KeyCode::Escape) {
             cmd.entity(entity).despawn();
         }
     }

@@ -26,7 +26,7 @@ struct PlayerCounter<'w, 's> {
     query: Query<'w, 's, (), With<Player>>,
 }
 
-impl<'w, 's> PlayerCounter<'w, 's> {
+impl PlayerCounter<'_, '_> {
     fn count(&mut self) {
         self.res.0 = self.query.iter().len();
     }
