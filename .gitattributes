@@ -1,6 +1,10 @@
 ## Set default behavior to never normalize line endings.
 * text=false
 
+# Exclude examples/ dir from linguist-documentation,
+# so that files under examples/ can be included in repo statistics.
+examples/** -linguist-documentation
+
 ## Git LFS ##
 ## Image
 *.webp filter=lfs diff=lfs merge=lfs -text
