@@ -1,5 +1,4 @@
 /.direnv
 /target
-/Cargo.lock
 /examples/playground.rs
 /examples/next.rs

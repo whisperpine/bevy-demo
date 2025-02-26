@@ -1,3 +1,5 @@
+//! A game demo built with Bevy.
+
 // rustc
 #![cfg_attr(debug_assertions, allow(unused))]
 #![cfg_attr(not(debug_assertions), deny(missing_docs))]
