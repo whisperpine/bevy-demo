@@ -32,8 +32,8 @@ fn setup(mut cmd: Commands) {
 
 fn modify_my_component(time: Res<Time>, mut query: Query<(Entity, &mut MyComponent)>) {
     use rand::Rng;
-    if rand::thread_rng().gen_bool(0.2) {
-        let value = time.elapsed_seconds().round();
+    if rand::rng().random_bool(0.2) {
+        let value = time.elapsed_secs().round();
         for (entity, mut my_component) in query.iter_mut() {
             let new_component = MyComponent(value);
             info!(

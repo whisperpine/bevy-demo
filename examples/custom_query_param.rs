@@ -42,7 +42,7 @@ fn print_system(mut query: Query<CustomQuery<ComponentC, ComponentD>, MyQueryFil
         println!("{:?}", e.a.name);
         if let Some(mut component_b) = e.b {
             **component_b += 1;
-            println!("{:?}", component_b);
+            println!("{component_b:?}");
         }
         println!("{:?}", e.generic.value);
     }

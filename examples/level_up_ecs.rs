@@ -11,7 +11,7 @@ fn main() {
             MyGamePlugin,
             MinimalPlugins,
             LogPlugin {
-                filter: format!("wgpu=error,naga=warn,{}=debug", CRATE_NAME),
+                filter: format!("wgpu=error,naga=warn,{CRATE_NAME}=debug"),
                 ..Default::default()
             },
         ))
@@ -124,15 +124,15 @@ fn add_xp_system(
     mut query: Query<(&mut PlayerXp, &Name), With<Player>>,
 ) {
     use rand::Rng;
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     if !xp_timer.0.tick(time.delta()).just_finished() {
         return;
     }
 
     for (mut xp, name) in query.iter_mut() {
-        if rng.gen_bool(0.5) {
-            let delta_xp: u32 = rng.gen_range(200..500);
+        if rng.random_bool(0.5) {
+            let delta_xp: u32 = rng.random_range(200..500);
             xp.0 += delta_xp;
             debug!(
                 "{} add {} xp ({} / {})",

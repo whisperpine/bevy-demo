@@ -40,7 +40,7 @@ fn setup(world: &mut World) {
     world.spawn(Callback(toggle_switch_system));
 
     // Run system directly by world.
-    world.run_system_once(count_entities);
+    world.run_system_once(count_entities).unwrap();
 }
 
 fn press_button() {
