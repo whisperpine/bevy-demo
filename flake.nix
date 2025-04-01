@@ -43,13 +43,9 @@
           let
             rust = prev.rust-bin;
           in
-          # rust.stable.latest.default.override {
-          #   extensions = [ "rust-src" ];
-          #   targets = [ ];
-          # };
-          rust.nightly."2025-02-20".default.override {
+          rust.stable.latest.default.override {
             extensions = [ "rust-src" ];
-            targets = [ "wasm32-unknown-unknown" ];
+            targets = [ ];
           };
       };
 
