@@ -1,6 +1,6 @@
 [package]
 name = "bevy-demo"
-authors = ["Yusong Lai <yusong.lai@icloud.com>"]
+authors = ["Yusong Lai <yusonglai64@gmail.com>"]
 repository = "https://github.com/whisperpine/bevy-demo"
 description = "A demo project following the Rust and WebAssembly Book"
 license = "MIT OR Apache-2.0"
