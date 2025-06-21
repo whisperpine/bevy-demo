@@ -8,45 +8,31 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, spawn)
-        .add_systems(Update, (bevy::window::close_on_esc, rotate, despawn_later))
+        .add_systems(Update, (rotate, despawn_later))
         .run();
 }
 
 fn spawn(mut cmd: Commands, asset_server: Res<AssetServer>) {
-    cmd.spawn(Camera2dBundle::default());
-
+    use bevy::color::palettes::css::ORANGE;
+    cmd.spawn(Camera2d);
     let texture = asset_server.load("branding/icon.png");
-    let parent = cmd
-        .spawn(SpriteBundle {
-            texture: texture.clone(),
-            ..default()
-        })
-        .with_children(|parent| {
-            parent.spawn(SpriteBundle {
-                texture: texture.clone(),
-                transform: Transform::from_xyz(300., 0., 0.).with_scale(Vec3::splat(0.5)),
-                sprite: Sprite {
-                    color: Color::SEA_GREEN,
+    cmd.spawn((
+        Sprite::from_image(texture.clone()),
+        children![
+            (
+                Sprite::from_image(texture.clone()),
+                Transform::from_xyz(300., 0., 0.).with_scale(Vec3::splat(0.5)),
+            ),
+            (
+                Sprite {
+                    image: texture.clone(),
+                    color: ORANGE.into(),
                     ..default()
                 },
-                ..default()
-            });
-        })
-        .id();
-
-    let another_child = cmd
-        .spawn(SpriteBundle {
-            texture: texture.clone(),
-            transform: Transform::from_xyz(0., 300., 0.).with_scale(Vec3::splat(0.5)),
-            sprite: Sprite {
-                color: Color::ORANGE,
-                ..default()
-            },
-            ..default()
-        })
-        .id();
-
-    cmd.entity(parent).add_child(another_child);
+                Transform::from_xyz(0., 300., 0.).with_scale(Vec3::splat(0.5)),
+            )
+        ],
+    ));
 }
 
 fn rotate(
@@ -58,12 +44,12 @@ fn rotate(
 
     for (entity, children) in parent_query.iter() {
         if let Ok(mut transform) = transform_query.get_mut(entity) {
-            transform.rotate_z(TAU * 0.1 * time.delta_seconds());
+            transform.rotate_z(TAU * 0.1 * time.delta_secs());
         }
 
         for child in children {
             if let Ok(mut transform) = transform_query.get_mut(*child) {
-                transform.rotate_z(TAU * 0.5 * time.delta_seconds());
+                transform.rotate_z(TAU * 0.5 * time.delta_secs());
             }
         }
     }
@@ -82,12 +68,13 @@ fn despawn_later(
     mut cmd: Commands,
     mut despawn_timer: Local<DespawnTimer>,
     time: Res<Time>,
-    query: Query<Entity, (With<Sprite>, With<Parent>)>,
+    query: Query<Entity, (With<Sprite>, With<ChildOf>)>,
 ) {
-    if despawn_timer.0.tick(time.delta()).just_finished() {
-        if let Some(entity) = query.iter().next() {
-            println!("elapsed seconds: {:.3}", time.elapsed_seconds());
-            cmd.entity(entity).despawn();
-        }
+    if !despawn_timer.0.tick(time.delta()).just_finished() {
+        return;
+    }
+    if let Some(entity) = query.iter().next() {
+        println!("elapsed seconds: {:.3}", time.elapsed_secs());
+        cmd.entity(entity).despawn();
     }
 }

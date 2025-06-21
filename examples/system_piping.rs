@@ -4,8 +4,8 @@
 // #![cfg_attr(debug_assertions, allow(unused))]
 
 use bevy::log::{Level, LogPlugin};
+use bevy::log::{debug, error, info, warn};
 use bevy::prelude::*;
-use bevy::utils::{dbg, error, info, warn};
 use std::num::ParseIntError;
 
 fn main() {
@@ -19,10 +19,27 @@ fn main() {
             ..Default::default()
         })
         .add_systems(Update, parse_int.pipe(log_parse_int))
-        .add_systems(Update, (data_output.map(dbg), data_output.map(info)))
         .add_systems(
             Update,
-            (warning_output.map(warn), warning_output.map(error)),
+            (
+                data_output.map(|out| debug!(out)),
+                data_output.map(|out| info!(out)),
+            ),
+        )
+        .add_systems(
+            Update,
+            (
+                warning_output.map(|out| {
+                    if let Err(err) = out {
+                        warn!(err)
+                    }
+                }),
+                warning_output.map(|out| {
+                    if let Err(err) = out {
+                        error!(err)
+                    }
+                }),
+            ),
         )
         .run();
 }

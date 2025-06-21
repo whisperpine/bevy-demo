@@ -114,9 +114,9 @@ fn log_game_rule_system(game_rules: Res<GameRules>) {
 /// Randomly score a point to players.
 fn add_score_system(mut query: Query<(&mut Score, &Name), With<Player>>) {
     use rand::Rng;
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     for (mut score, name) in &mut query {
-        if rng.gen::<bool>() {
+        if rng.random::<bool>() {
             **score += 1;
             println!("+++ {}'s score +1", name.0);
         }
@@ -143,7 +143,7 @@ fn check_score_system(
     }
 }
 
-/// Randomly add new palyer.
+/// Randomly add new player.
 fn add_player_system(
     mut cmd: Commands,
     game_rules: Res<GameRules>,
@@ -152,7 +152,7 @@ fn add_player_system(
     if rand::random::<bool>() && game_state.total_players < game_rules.max_player {
         game_state.total_players += 1;
         let name = format!("Player {}", game_state.total_players);
-        println!("{} will participate in the next round", name);
+        println!("{name} will participate in the next round");
         cmd.spawn((Player, Name(name), Score::default()));
     }
 }
@@ -176,10 +176,10 @@ fn game_over_system(
 ) {
     if let Some(name) = &game_state.winner {
         println!("\nWinner is {}\n", name.0);
-        app_exit_event.send(AppExit);
+        app_exit_event.write(AppExit::Success);
     } else if game_state.current_round >= game_rules.max_round {
         println!("\nGame over without a winner\n");
-        app_exit_event.send(AppExit);
+        app_exit_event.write(AppExit::Success);
     }
 }
 

@@ -88,7 +88,7 @@ fn player_level_up_system(
         if xp.0 > game_rules.level_up_xp {
             xp.0 -= game_rules.level_up_xp;
             level.0 += 1;
-            even_writer.send(LevelUpEvent {
+            even_writer.write(LevelUpEvent {
                 entity,
                 name: name.0.clone(),
                 level: level.0,

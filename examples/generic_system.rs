@@ -8,10 +8,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .init_state::<AppState>()
         .add_systems(Startup, setup)
-        .add_systems(
-            Update,
-            (bevy::window::close_on_esc, change_app_state, log_on_enter),
-        )
+        .add_systems(Update, (change_app_state, log_on_enter))
         .add_systems(OnExit(AppState::Menu), cleanup_system::<MenuStateTag>)
         .add_systems(OnExit(AppState::InGame), cleanup_system::<InGameStateTag>)
         .run();
@@ -52,6 +49,6 @@ fn log_on_enter(app_state: Res<State<AppState>>) {
 fn cleanup_system<T: Component>(mut cmd: Commands, query: Query<Entity, With<T>>) {
     for entity in query.iter() {
         info!("despawn {:?}", entity);
-        cmd.entity(entity).despawn_recursive();
+        cmd.entity(entity).despawn();
     }
 }

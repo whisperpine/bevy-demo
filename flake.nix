@@ -62,7 +62,7 @@
               cargo-edit # managing cargo dependencies
               cargo-deny # linting dependencies
               bacon # background code checker
-              just
+              just # just a command runner
 
               # bevy dependencies
               pkg-config

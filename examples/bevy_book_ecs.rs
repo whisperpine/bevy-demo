@@ -70,8 +70,6 @@ impl PlayerBundle {
 }
 
 /// Press `Ecs` to close focussed window.
-///
-/// The same as [`bevy::window::close_on_esc`].
 fn close_on_esc(
     mut cmd: Commands,
     query: Query<(Entity, &Window)>,

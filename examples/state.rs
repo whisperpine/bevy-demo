@@ -17,7 +17,6 @@ fn main() {
             Update,
             (move_sprite, change_color).run_if(in_state(AppState::InGame)),
         )
-        .add_systems(Update, bevy::window::close_on_esc)
         .run();
 }
 
@@ -32,54 +31,43 @@ enum AppState {
 struct MenuItem(Entity);
 
 fn setup_camera(mut cmd: Commands) {
-    cmd.spawn(Camera2dBundle::default());
+    cmd.spawn(Camera2d);
 }
 
 fn setup_menu(mut cmd: Commands) {
     let entity = cmd
-        .spawn(NodeBundle {
-            style: Style {
+        .spawn((
+            Node {
                 width: Val::Percent(100.),
                 height: Val::Percent(100.),
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 ..Default::default()
             },
-            ..Default::default()
-        })
-        .with_children(|parent| {
-            parent
-                .spawn(ButtonBundle {
-                    style: Style {
-                        width: Val::Px(150.),
-                        height: Val::Px(65.),
-                        justify_content: JustifyContent::Center,
-                        align_items: AlignItems::Center,
-                        ..Default::default()
-                    },
-                    background_color: BUTTON_COLOR_DEFAULT.into(),
+            children![(
+                Button,
+                Node {
+                    width: Val::Px(150.),
+                    height: Val::Px(65.),
+                    justify_content: JustifyContent::Center,
+                    align_items: AlignItems::Center,
                     ..Default::default()
-                })
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Play",
-                        TextStyle {
-                            font_size: 35.,
-                            ..Default::default()
-                        },
-                    ));
-                });
-        })
+                },
+                BackgroundColor(BUTTON_COLOR_DEFAULT),
+                children![(Text::new("Play"), TextFont::from_font_size(35.))],
+            )],
+        ))
         .id();
 
     cmd.insert_resource(MenuItem(entity));
 }
 
+use bevy::color::palettes;
 const BUTTON_COLOR_DEFAULT: Color = Color::BLACK;
-const BUTTON_COLOR_HOVER: Color = Color::SEA_GREEN;
-const BUTTON_COLOR_PRESSED: Color = Color::ORANGE;
+const BUTTON_COLOR_HOVER: Color = Color::Srgba(palettes::css::SEA_GREEN);
+const BUTTON_COLOR_PRESSED: Color = Color::Srgba(palettes::css::ORANGE);
 
-#[allow(clippy::type_complexity)]
+#[expect(clippy::type_complexity)]
 fn menu(
     mut app_state: ResMut<NextState<AppState>>,
     mut button_query: Query<
@@ -101,13 +89,13 @@ fn menu(
 
 fn cleanup_menu(mut cmd: Commands, menu_item: Option<Res<MenuItem>>) {
     if let Some(item) = menu_item {
-        cmd.entity(item.0).despawn_recursive();
+        cmd.entity(item.0).despawn();
     }
 }
 
 fn spawn_sprite(mut cmd: Commands, asset_server: Res<AssetServer>) {
-    cmd.spawn(SpriteBundle {
-        texture: asset_server.load("./branding/icon.png"),
+    cmd.spawn(Sprite {
+        image: asset_server.load("./branding/icon.png"),
         ..Default::default()
     });
 }
@@ -135,7 +123,7 @@ fn move_sprite(
         }
 
         if direction != Vec3::ZERO {
-            transform.translation += direction.normalize() * SPEED * time.delta_seconds();
+            transform.translation += direction.normalize() * SPEED * time.delta_secs();
         }
     }
 }
@@ -144,6 +132,6 @@ fn change_color(time: Res<Time>, mut query: Query<&mut Sprite>) {
     for mut sprite in &mut query {
         sprite
             .color
-            .set_b((time.elapsed_seconds() * 0.5).sin() + 2.0);
+            .set_hue((time.elapsed_secs() * 0.5).sin() + 2.0);
     }
 }

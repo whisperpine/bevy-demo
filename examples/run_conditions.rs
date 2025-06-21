@@ -1,6 +1,6 @@
 //! This example demonstrates how to use run conditions to control when systems run.
 
-#![cfg_attr(debug_assertions, allow(unused))]
+// #![cfg_attr(debug_assertions, allow(unused))]
 
 use std::fmt::Debug;
 
@@ -12,20 +12,22 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .init_resource::<InputCounter>()
-        .add_systems(Update, (bevy::window::close_on_esc, log_input))
+        .add_systems(Update, log_input)
         .add_systems(
             Update,
             count_input
                 .run_if(resource_exists::<InputCounter>)
-                .run_if(resource_exists::<Unused>.or_else(has_user_input)),
+                .run_if(resource_exists::<Unused>.or(has_user_input)),
         )
         .add_systems(
             Update,
-            print_input_counter.after(count_input).run_if(
-                resource_exists::<InputCounter>.and_then(|input_counter: Res<InputCounter>| {
-                    input_counter.is_changed() && !input_counter.is_added()
-                }),
-            ),
+            print_input_counter
+                .after(count_input)
+                .run_if(
+                    resource_exists::<InputCounter>.and(|input_counter: Res<InputCounter>| {
+                        input_counter.is_changed() && !input_counter.is_added()
+                    }),
+                ),
         )
         .add_systems(
             Update,
@@ -52,10 +54,10 @@ fn print_input_counter(input_counter: ResMut<InputCounter>) {
 
 fn log_input(keyboard: Res<ButtonInput<KeyCode>>, mouse: Res<ButtonInput<MouseButton>>) {
     for key in keyboard.get_just_pressed() {
-        println!("KeyCode: {:?}", key);
+        println!("KeyCode: {key:?}");
     }
     for mouse in mouse.get_just_pressed() {
-        println!("MouseButton: {:?}", mouse);
+        println!("MouseButton: {mouse:?}");
     }
 }
 
@@ -72,5 +74,5 @@ fn print_time_message() {
 }
 
 fn is_time_passed(cmp_time: f32) -> impl FnMut(Res<Time>) -> bool {
-    move |time: Res<Time>| time.elapsed_seconds() > cmp_time
+    move |time: Res<Time>| time.elapsed_secs() > cmp_time
 }

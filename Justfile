@@ -5,5 +5,5 @@ build:
     --target wasm32-unknown-unknown
 
 # run a given example
-example NAME:
+rune NAME:
     cargo run --example {{NAME}}
