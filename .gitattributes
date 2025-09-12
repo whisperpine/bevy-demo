@@ -5,6 +5,13 @@
 # so that files under examples/ can be included in repo statistics.
 examples/** -linguist-documentation
 
+# Remove files under ./husky from repo statistics.
+.husky/** -linguist-detectable
+# Remove flake.nix from repo statistics.
+flake.nix -linguist-detectable
+# Remove .envrc from repo statistics.
+.envrc -linguist-detectable
+
 ## Git LFS ##
 ## Image
 *.webp filter=lfs diff=lfs merge=lfs -text
