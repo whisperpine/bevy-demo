@@ -1,3 +1,7 @@
+# list all available subcommands
+_default:
+  @just --list
+
 # build for wasm32-unknown-unknown
 build:
   cargo build \
