@@ -68,12 +68,36 @@
               # --- common --- #
               just # just a command runner
 
-              # --- bevy --- #
-              pkg-config
-              vulkan-loader
-              alsa-lib
-              udev
+              # --- bevy linux --- #
+              pkg-config # build tools
+              vulkan-loader # vulkan
+              alsa-lib # for sound
+              udev # device manager
+
+              # --- bevy wayland --- #
+              wayland # wayland client library
+              libxkbcommon # keyboard input on Wayland
+
+              # # --- bevy x11 --- #
+              # xorg.libX11
+              # xorg.libXcursor
+              # xorg.libXi
+              # xorg.libXrandr
             ];
+
+            env = {
+              LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (
+                with pkgs;
+                [
+                  vulkan-loader
+                  libxkbcommon
+                  # xorg.libX11
+                  # xorg.libXi
+                  # xorg.libXcursor
+                ]
+              );
+            };
+
             # The shell script executed when the environment is activated.
             shellHook = ''
               # Print the last modified date of "flake.lock".
