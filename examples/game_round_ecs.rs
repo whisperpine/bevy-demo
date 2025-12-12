@@ -172,7 +172,7 @@ use bevy::app::AppExit;
 fn game_over_system(
     game_state: Res<GameState>,
     game_rules: Res<GameRules>,
-    mut app_exit_event: EventWriter<AppExit>,
+    mut app_exit_event: MessageWriter<AppExit>,
 ) {
     if let Some(name) = &game_state.winner {
         println!("\nWinner is {}\n", name.0);

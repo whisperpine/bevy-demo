@@ -65,11 +65,7 @@ struct ComponentD;
 
 #[derive(QueryData)]
 #[query_data(mutable, derive(Debug))]
-struct CustomQuery<T, U>
-where
-    T: Component + Debug,
-    U: Component + Debug,
-{
+struct CustomQuery<T: Component + Debug, U: Component + Debug> {
     entity: Entity,
     a: &'static ComponentA,
     b: Option<&'static mut ComponentB>,

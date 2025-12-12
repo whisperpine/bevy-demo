@@ -26,9 +26,9 @@ fn print_hints() {
 
 fn add_people(mut commands: Commands) {
     commands.spawn_batch([
-        PlayerBundle::new("amiao"),
-        PlayerBundle::new("yusong"),
-        PlayerBundle::new("yahaha"),
+        Player::new("amiao"),
+        Player::new("yusong"),
+        Player::new("yahaha"),
     ]);
 }
 
@@ -38,33 +38,29 @@ struct GreetTimer(Timer);
 fn greet_people(
     time: Res<Time>,
     mut greet_timer: ResMut<GreetTimer>,
-    query: Query<&Name, With<Person>>,
+    query: Query<&Player, With<Person>>,
 ) {
     if greet_timer.0.tick(time.delta()).just_finished() {
-        for name in &query {
-            println!("hello {}!", **name);
+        for player in &query {
+            println!("hello {}!", player.name);
         }
         println!();
     }
 }
 
-#[derive(Component)]
+#[derive(Component, Default)]
 struct Person;
 
-#[derive(Component, Deref)]
-struct Name(String);
-
-#[derive(Bundle)]
-struct PlayerBundle {
-    person: Person,
-    name: Name,
+#[derive(Component)]
+#[require(Person)]
+struct Player {
+    name: String,
 }
 
-impl PlayerBundle {
+impl Player {
     fn new(name: &str) -> Self {
         Self {
-            person: Person,
-            name: Name(name.to_owned()),
+            name: name.to_owned(),
         }
     }
 }
