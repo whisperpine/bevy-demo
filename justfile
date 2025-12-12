@@ -3,7 +3,7 @@ _default:
   @just --list
 
 # build for wasm32-unknown-unknown
-build:
+build-wasm:
   cargo build \
   --profile wasm-release \
   --target wasm32-unknown-unknown
