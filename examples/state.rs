@@ -34,6 +34,7 @@ fn setup_camera(mut cmd: Commands) {
     cmd.spawn(Camera2d);
 }
 
+#[expect(clippy::double_parens)]
 fn setup_menu(mut cmd: Commands) {
     let entity = cmd
         .spawn((
