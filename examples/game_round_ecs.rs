@@ -172,14 +172,14 @@ use bevy::app::AppExit;
 fn game_over_system(
     game_state: Res<GameState>,
     game_rules: Res<GameRules>,
-    mut app_exit_event: MessageWriter<AppExit>,
+    mut app_exit_msg: MessageWriter<AppExit>,
 ) {
     if let Some(name) = &game_state.winner {
         println!("\nWinner is {}\n", name.0);
-        app_exit_event.write(AppExit::Success);
+        app_exit_msg.write(AppExit::Success);
     } else if game_state.current_round >= game_rules.max_round {
         println!("\nGame over without a winner\n");
-        app_exit_event.write(AppExit::Success);
+        app_exit_msg.write(AppExit::Success);
     }
 }
 
