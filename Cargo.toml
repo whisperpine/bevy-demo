@@ -65,6 +65,7 @@ exit = "warn"
 [profile.dev]
 # Enable a small amount of optimization in debug mode.
 opt-level = 1
+
 [profile.dev.package."*"]
 # Enable high optimizations for dependencies (including Bevy).
 opt-level = 3
@@ -96,6 +97,7 @@ codegen-units = 1
 # By telling cargo to optimize at the link stage (in addition to the
 # normal optimizations during the compilation stage).
 lto = true
+
 # By overriding our dependencies' compilation settings, we can further optimize for size.
 # https://docs.rust-embedded.org/book/unsorted/speed-vs-size.html#optimizing-dependencies
 [profile.wasm-release.package."*"]
