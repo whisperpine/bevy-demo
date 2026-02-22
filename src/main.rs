@@ -1,6 +1,5 @@
 //! A game demo built with Bevy.
 
-#![cfg_attr(debug_assertions, allow(unused))]
 #![cfg_attr(
     not(debug_assertions),
     deny(warnings, missing_docs),
