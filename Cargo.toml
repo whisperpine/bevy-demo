@@ -101,7 +101,7 @@ opt-level = "z"
 # ------------ #
 
 [dependencies.bevy]
-version = "0.18.0"
+version = "0.18.1"
 
 [dependencies]
 anyhow = "1.0.100"
