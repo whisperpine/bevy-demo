@@ -3,9 +3,8 @@
 use bevy::{log::LogPlugin, prelude::*};
 
 fn main() {
-    println!("\n#### level_up_ecs ####\n");
     const CRATE_NAME: &str = env!("CARGO_CRATE_NAME");
-
+    println!("\n#### level_up_ecs ####\n");
     App::new()
         .add_plugins((
             MyGamePlugin,
@@ -71,7 +70,7 @@ fn setup_system(mut cmd: Commands) {
         Player::new("amiao"),
         Player::new("yahaha"),
         Player::new("yusong"),
-    ])
+    ]);
 }
 
 fn player_level_up_system(

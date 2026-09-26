@@ -12,4 +12,5 @@
 
 fn main() {
     println!("\n#### main ####\n");
+    bevy::app::App::new().run();
 }

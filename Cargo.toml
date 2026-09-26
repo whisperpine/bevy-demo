@@ -11,13 +11,20 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 edition = "2024"
 
+# ------------- #
+# linting rules
+# ------------- #
+
+[lints]
+workspace = true
+
 # Rustc lints (https://doc.rust-lang.org/rustc/lints/index.html).
 [workspace.lints.rust]
 # lint groups (https://doc.rust-lang.org/rustc/lints/groups.html)
-deprecated-safe = { level = "deny", priority = -1 }
-future-incompatible = { level = "deny", priority = -1 }
-keyword-idents = { level = "deny", priority = -1 }
-rust-2024-compatibility = { level = "warn", priority = -1 }
+deprecated_safe = { level = "deny", priority = -1 }
+future_incompatible = { level = "deny", priority = -1 }
+keyword_idents = { level = "deny", priority = -1 }
+rust_2024_compatibility = { level = "warn", priority = -1 }
 # lint listing (https://doc.rust-lang.org/rustc/lints/listing/index.html)
 missing_debug_implementations = "deny"
 unreachable_pub = "deny"
@@ -96,13 +103,16 @@ lto = true
 codegen-units = 1
 opt-level = "z"
 
+# ---------------- #
+# dev-dependencies
+# ---------------- #
+
+[dev-dependencies]
+rand = "0.9.2"
+
 # ------------ #
 # dependencies
 # ------------ #
 
 [dependencies.bevy]
-version = "0.18.1"
-
-[dependencies]
-anyhow = "1.0.100"
-rand = "0.9.2"
+version = "0.19.1"

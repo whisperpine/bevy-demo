@@ -31,12 +31,12 @@ fn main() {
             (
                 warning_output.map(|out| {
                     if let Err(err) = out {
-                        warn!(err)
+                        warn!(err);
                     }
                 }),
                 warning_output.map(|out| {
                     if let Err(err) = out {
-                        error!(err)
+                        error!(err);
                     }
                 }),
             ),

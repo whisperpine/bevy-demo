@@ -17,17 +17,15 @@ fn main() {
             Update,
             count_input
                 .run_if(resource_exists::<InputCounter>)
-                .run_if(resource_exists::<Unused>.or(has_user_input)),
+                .run_if(resource_exists::<Unused>.or_else(has_user_input)),
         )
         .add_systems(
             Update,
-            print_input_counter
-                .after(count_input)
-                .run_if(
-                    resource_exists::<InputCounter>.and(|input_counter: Res<InputCounter>| {
-                        input_counter.is_changed() && !input_counter.is_added()
-                    }),
-                ),
+            print_input_counter.after(count_input).run_if(
+                resource_exists::<InputCounter>.and_then(|input_counter: Res<InputCounter>| {
+                    input_counter.is_changed() && !input_counter.is_added()
+                }),
+            ),
         )
         .add_systems(
             Update,

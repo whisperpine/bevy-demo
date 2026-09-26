@@ -83,7 +83,7 @@ fn menu(
             }
             Interaction::Hovered => *bg_color = BUTTON_COLOR_HOVER.into(),
             Interaction::None => *bg_color = BUTTON_COLOR_DEFAULT.into(),
-        };
+        }
     }
 }
 

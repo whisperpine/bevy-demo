@@ -16,11 +16,10 @@ struct Velocity(Vec2);
 
 fn spawn_system(mut cmd: Commands, asset_server: Res<AssetServer>) {
     use rand::Rng;
-    let mut rng = rand::rng();
-
     const SPEED: f32 = 500.;
-    let texture = asset_server.load("branding/icon.png");
 
+    let mut rng = rand::rng();
+    let texture = asset_server.load("branding/icon.png");
     cmd.spawn(Camera2d);
     for _ in 0..1024 {
         let direction =
@@ -44,6 +43,8 @@ fn bounce_system(
     window: Query<&Window>,
     mut sprites: Query<(&Transform, &mut Velocity), With<Sprite>>,
 ) -> Result {
+    use bevy::ecs::batching::BatchingStrategy;
+
     let window = window.single()?;
     let width = window.width();
     let height = window.height();
@@ -52,7 +53,6 @@ fn bounce_system(
     let bottom = height / -2.;
     let top = height / 2.;
 
-    use bevy::ecs::batching::BatchingStrategy;
     sprites
         .par_iter_mut()
         .batching_strategy(BatchingStrategy::fixed(64))

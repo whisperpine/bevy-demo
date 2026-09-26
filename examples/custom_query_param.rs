@@ -6,9 +6,9 @@ use bevy::ecs::query::{QueryData, QueryFilter};
 use bevy::prelude::*;
 
 fn main() {
-    println!("\n#### custom_query_param ####\n");
-
     use bevy::app::ScheduleRunnerPlugin;
+
+    println!("\n#### custom_query_param ####\n");
     App::new()
         .add_plugins(MinimalPlugins.set(ScheduleRunnerPlugin::run_loop(
             std::time::Duration::from_secs_f32(0.5),

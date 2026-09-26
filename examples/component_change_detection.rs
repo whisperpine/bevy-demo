@@ -3,12 +3,11 @@
 use bevy::prelude::*;
 
 fn main() {
-    println!("\n#### component_change_detection ####\n");
-
     use bevy::app::ScheduleRunnerPlugin;
     use bevy::log::LogPlugin;
     use std::time::Duration;
 
+    println!("\n#### component_change_detection ####\n");
     App::new()
         .add_plugins((
             MinimalPlugins.set(ScheduleRunnerPlugin::run_loop(Duration::from_secs_f32(0.2))),
